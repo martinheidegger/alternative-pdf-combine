@@ -24,7 +24,7 @@ function combinePdfs(buffers, callback) {
 		} else if (input.encoding !== undefined) {
 			return new Buffer(input.text, input.encoding)
 		} else if (input.file) {
-			return fs.readFile(input.file)
+			return fs.readFileSync(input.file)
 		}
 		return new Buffer(input.toString())
 	})
