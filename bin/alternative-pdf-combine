@@ -10,7 +10,7 @@ if (process.argv.length < 4) {
 }
 
 combinePdfs(process.argv.slice(3).map(function (input) {
-	return fs.readFileSync(path.resolve(input))
+	return {file: input} 
 }), function (err, combinedBuffer) {
 	if (err) {
 		console.log(err)

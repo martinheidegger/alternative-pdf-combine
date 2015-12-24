@@ -9,7 +9,10 @@ There are various tools in the npm that allow for combining pdf's this tool is l
 var combinePdfs = require('alternative-pdf-combine')
 combinePdfs([
 	fs.readFileSync('pdf1.pdf'),
-	fs.readFileSync('pdf2.pdf')
+	{file: '', pdf2.pdf'}, // will automatically call fs.readFileSync
+	new Buffer('...'),  // will use this buffer
+	'...', // will be converted to Buffer using new Buffer(txt)
+	{text: '...', encoding: 'utf8'} // will convert the  text to a buffer using new Buffer(obj.text, obj.encoding)
 ], function (err, combinedBuffer) {
 	if (err) {
 		console.log(err)
@@ -25,6 +28,9 @@ combinePdfs([
 })
 
 ```
+
+_Note:_ it will use `pdfunite` if installed on a mac since its way faster and creates
+smaller files.
 
 # Contribution
 

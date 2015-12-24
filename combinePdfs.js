@@ -21,21 +21,23 @@ function combinePdfs(buffers, callback) {
 	buffers = buffers.map(function makeSureOfBuffer(input) {
 		if (input instanceof Buffer) {
 			return input
-		} else {
-			return fs.readFile()
+		} else if (input.encoding !== undefined) {
+			return new Buffer(input.text, input.encoding)
+		} else if (input.file) {
+			return fs.readFile(input.file)
 		}
+		return new Buffer(input.toString())
 	})
 	var inputControl = buffers.map(bufferToTmp)
 	var input = inputControl.map(function (tmp) {
 		return tmp.path
 	})
 	var output = tmpFileName()
-	if (isMac) {
-		return setImmediate(run.bind(null, 'python', [path.resolve(__dirname, 'automator.py'), '-o', output].concat(input), output, inputControl, callback))
-	}
 	require('command-exists')(PDF_UNITE, function (err, exists) {
 		if (exists) {
 			return run(PDF_UNITE, input.concat([output]), output, inputControl, callback)
+		} else if (isMac) {
+			return run('python', [path.resolve(__dirname, 'automator.py'), '-o', output].concat(input), output, inputControl, callback)
 		}
 		callback(new Error('We need at least poppler to work out fine. (actually: pdf-unite is the command we are looking for)'))
 	})
