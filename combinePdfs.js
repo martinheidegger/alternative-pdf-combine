@@ -5,26 +5,53 @@ var tmpdir = require('os').tmpdir
 var isMac = require('os').type() === 'Darwin'
 var PDF_UNITE = 'pdfunite'
 
-function run(cmd, args, output, inputControl, callback) {
+function run(cmd, args, output, inputControl, debug, callback) {
+	if (debug) {
+		console.log('[debug] Calling:', cmd, args.map(function (arg) {
+			return '"' + arg.replace(/\"/g, '\\"').replace(/\n/gm, '\\n') + '"'
+		}).join(' '))
+	}
 	var process = spawn(cmd, args)
-	process.on('exit', function () {
-		fs.readFile(output, function (err, buffer) {
-			inputControl.forEach(function (input) {
-				input.cleanup()
+	var called = false
+	var error = ''
+	process.stderr.on('data', function (data) {
+		error += data
+	})
+	process.on('exit', function (code) {
+		if (code === 0) {
+			fs.readFile(output, function (err, buffer) {
+				inputControl.forEach(function (input) {
+					input.cleanup()
+				})
+				callback(err, buffer)
 			})
-			callback(err, buffer)
-		})
+		} else {
+			callback(new Error(error))
+		}
 	})
 }
 
-function combinePdfs(buffers, callback) {
-	buffers = buffers.map(function makeSureOfBuffer(input) {
+function combinePdfs(buffers, debug, callback) {
+	if (typeof debug == 'function') {
+		callback = debug
+		debug = false
+	}
+	buffers = buffers.map(function makeSureOfBuffer(input, nr) {
 		if (input instanceof Buffer) {
 			return input
 		} else if (input.encoding !== undefined) {
+			if (debug) {
+				console.log('[debug] Converting ' + nr + ' to buffer with encoding ' + input.encoding)
+			}
 			return new Buffer(input.text, input.encoding)
 		} else if (input.file) {
+			if (debug) {
+				console.log('[debug] Converting ' + nr + ' to buffer from file ' + input.file)
+			}
 			return fs.readFileSync(input.file)
+		}
+		if (debug) {
+			console.log('[debug] Converting ' + nr + ' to buffer from string')
 		}
 		return new Buffer(input.toString())
 	})
@@ -35,9 +62,9 @@ function combinePdfs(buffers, callback) {
 	var output = tmpFileName()
 	require('command-exists')(PDF_UNITE, function (err, exists) {
 		if (exists) {
-			return run(PDF_UNITE, input.concat([output]), output, inputControl, callback)
+			return run(PDF_UNITE, input.concat([output]), output, inputControl, debug, callback)
 		} else if (isMac) {
-			return run('python', [path.resolve(__dirname, 'automator.py'), '-o', output].concat(input), output, inputControl, callback)
+			return run('python', [path.resolve(__dirname, 'automator.py'), '-o', output].concat(input), output, inputControl, debug, callback)
 		}
 		callback(new Error('We need at least poppler to work out fine. (actually: pdf-unite is the command we are looking for)'))
 	})
