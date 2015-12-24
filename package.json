@@ -1,13 +1,16 @@
 {
   "name": "alternative-pdf-combine",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Alternative approach to combine pdf's (doesn't support windows, requires poppler on linux)",
   "main": "combinePdfs.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": "bin/alternative-pdf-combine",
-  "keywords": ["pdf", "combine"],
+  "keywords": [
+    "pdf",
+    "combine"
+  ],
   "author": "Martin Heidegger <martin.heidegger@gmail.com>",
   "license": "ISC",
   "dependencies": {
