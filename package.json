@@ -1,6 +1,6 @@
 {
   "name": "alternative-pdf-combine",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Alternative approach to combine pdf's (doesn't support windows, requires poppler on linux)",
   "main": "combinePdfs.js",
   "scripts": {
