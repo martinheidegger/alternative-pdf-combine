@@ -23,6 +23,7 @@ function run(cmd, args, output, inputControl, debug, callback) {
 				inputControl.forEach(function (input) {
 					input.cleanup()
 				})
+				output.cleanup()
 				callback(err, buffer)
 			})
 		} else {
