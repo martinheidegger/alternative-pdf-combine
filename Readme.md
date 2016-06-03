@@ -45,8 +45,14 @@ combinePdfs([
 
 ```
 
-_Note:_ it will use `pdfunite` if installed on a mac since its way faster and creates
-smaller files.
+## Mac & PDF Unite
+
+By default, on Mac, it will try to use mac's pdf combination. But it will use `pdfunite` if installed on a mac since
+its way faster and creates smaller files. You can install pdfunite on mac using [homebrew](http://brew.sh/): `brew install poppler`
+
+If you wish to always use Mac's pdf combination solution set the environment variable:
+`ALTERNATIVE_PDF_COMBINE_OVERRIDE_PDFUNITE=true`
+
 
 ## Contribution
 

@@ -2,8 +2,7 @@ var fs = require('fs')
 var path = require('path')
 var spawn = require('child_process').spawn
 var tmpdir = require('os').tmpdir
-var isMac = require('os').type() === 'Darwin'
-var PDF_UNITE = 'pdfunite'
+var usePdfUnite = require('./lib/usePdfUnite')
 
 function run (cmd, args, output, inputControl, debug, callback) {
   if (debug) {
@@ -59,17 +58,16 @@ function combinePdfs (buffers, debug, callback) {
   var input = inputControl.map(function (tmp) {
     return tmp.path
   })
-  var output = tmpFileName()
-  require('command-exists')(PDF_UNITE, function (err, exists) {
-    if (err && debug) {
-      console.log('[debug] Error feedback' + err)
+  usePdfUnite(debug, function (err, pdfUnite) {
+    if (err) {
+      console.log(err)
+      return
     }
-    if (exists) {
-      return run(PDF_UNITE, input.concat([output]), output, inputControl, debug, callback)
-    } else if (isMac) {
-      return run('python', [path.resolve(__dirname, 'automator.py'), '-o', output].concat(input), output, inputControl, debug, callback)
+    var output = tmpFileName()
+    if (pdfUnite) {
+      return run(pdfUnite, input.concat([output]), output, inputControl, debug, callback)
     }
-    callback(new Error('We need at least poppler to work out fine. (actually: pdf-unite is the command we are looking for)'))
+    return run('python', [path.resolve(__dirname, 'automator.py'), '-o', output].concat(input), output, inputControl, debug, callback)
   })
 }
 
