@@ -17,11 +17,15 @@ combinePdfs(process.argv.slice(3).map(function (input) {
     process.exit(1)
   }
   var out = path.resolve(process.argv[2])
-  fs.writeFile(out, combinedBuffer, function (err) {
-    if (err) {
-      console.log(err)
-      process.exit(1)
-    }
-    console.log(out)
-  })
+  if (combinedBuffer !== undefined) {
+    fs.writeFile(out, combinedBuffer, function (err) {
+      if (err) {
+        console.log(err)
+        process.exit(1)
+      }
+      console.log(out)
+    }) 
+  } else {
+    console.log('[warn] No buffers to combine')
+  }
 })

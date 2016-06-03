@@ -4,7 +4,9 @@
   "description": "Alternative approach to combine pdf's (doesn't support windows, requires poppler on linux)",
   "main": "combinePdfs.js",
   "scripts": {
-    "test": "standard"
+    "test": "standard && tap -- test/combinePdfs.js",
+    "lint": "standard",
+    "quick": "tap -- test/combinePdfs.js"
   },
   "bin": "bin/alternative-pdf-combine",
   "keywords": [
@@ -17,6 +19,7 @@
     "command-exists": "^1.0.1"
   },
   "devDependencies": {
-    "standard": "^7.1.1"
+    "standard": "^7.1.1",
+    "tap": "^5.7.2"
   }
 }

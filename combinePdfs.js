@@ -21,7 +21,7 @@ function run (cmd, args, output, inputControl, debug, callback) {
         inputControl.forEach(function (input) {
           input.cleanup()
         })
-        output.cleanup()
+        fs.unlink(output)
         callback(err, buffer)
       })
     } else {
@@ -54,6 +54,9 @@ function combinePdfs (buffers, debug, callback) {
     }
     return new Buffer(input.toString())
   })
+  if (buffers.length === 0) {
+    return setImmediate(callback.bind(null, null, undefined))
+  }
   var inputControl = buffers.map(bufferToTmp)
   var input = inputControl.map(function (tmp) {
     return tmp.path
