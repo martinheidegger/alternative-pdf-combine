@@ -4,7 +4,7 @@
   "description": "Alternative approach to combine pdf's (doesn't support windows, requires poppler on linux)",
   "main": "combinePdfs.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "standard"
   },
   "bin": "bin/alternative-pdf-combine",
   "keywords": [
@@ -15,5 +15,8 @@
   "license": "ISC",
   "dependencies": {
     "command-exists": "^1.0.1"
+  },
+  "devDependencies": {
+    "standard": "^7.1.1"
   }
 }

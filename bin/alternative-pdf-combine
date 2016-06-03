@@ -5,23 +5,23 @@ var path = require('path')
 var combinePdfs = require('..')
 
 if (process.argv.length < 4) {
-	console.log("Usage: alternative-pdf-combine out.pdf in1.pdf ... inx.pdf")
-	process.exit(1)
+  console.log("Usage: alternative-pdf-combine out.pdf in1.pdf ... inx.pdf")
+  process.exit(1)
 }
 
 combinePdfs(process.argv.slice(3).map(function (input) {
-	return {file: input} 
+  return {file: input} 
 }), process.env.DEBUG_ALTERNATIVE_PDF_COMBINE === 'true', function (err, combinedBuffer) {
-	if (err) {
-		console.log(err)
-		process.exit(1)
-	}
-	var out = path.resolve(process.argv[2])
-	fs.writeFile(out, combinedBuffer, function (err) {
-		if (err) {
-			console.log(err)
-			process.exit(1)
-		}
-		console.log(out)
-	})
+  if (err) {
+    console.log(err)
+    process.exit(1)
+  }
+  var out = path.resolve(process.argv[2])
+  fs.writeFile(out, combinedBuffer, function (err) {
+    if (err) {
+      console.log(err)
+      process.exit(1)
+    }
+    console.log(out)
+  })
 })
